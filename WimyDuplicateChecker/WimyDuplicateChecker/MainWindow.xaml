@@ -7,7 +7,7 @@
         <Button Content="Browse..." HorizontalAlignment="Right" VerticalAlignment="Top" Width="78" Height="83" Click="OnBrowse" Margin="0,10,10,0"/>
         <Button Content="Remove" HorizontalAlignment="Right" Margin="0,98,10,0" VerticalAlignment="Top" Width="78" Height="39"/>
         <Button x:Name="start_button_" Content="Start" Margin="0,173,0,0" VerticalAlignment="Top" Height="81" Click="OnStart"/>
-        <TextBox x:Name="log_" Margin="0,259,0,27" TextWrapping="Wrap" Text="Drag a directory above or press Browse button" VerticalScrollBarVisibility="Auto"/>
+        <TextBox x:Name="log_" Margin="0,0,0,27" TextWrapping="Wrap" Text="Drag a directory above or press Browse button" VerticalScrollBarVisibility="Auto" Height="83" VerticalAlignment="Bottom"/>
         <StatusBar Height="27" VerticalAlignment="Bottom">
             <StatusBarItem x:Name="status_bar_" Content="Ready"/>
         </StatusBar>
@@ -15,5 +15,14 @@
         <Label Content="MB 이상 파일만 체크" HorizontalAlignment="Left" Margin="366,142,0,0" VerticalAlignment="Top" Width="141"/>
         <TextBox x:Name="search_pattern_" HorizontalAlignment="Left" Height="23" Margin="10,142,0,0" TextWrapping="Wrap" Text="*.*" VerticalAlignment="Top" Width="120"/>
         <Label Content="파일 패턴만 체크" HorizontalAlignment="Left" Margin="135,142,0,0" VerticalAlignment="Top" Width="141"/>
+        <ListView ItemsSource="{Binding DuplicatedList}" SelectedValue="{Binding SelectedResult}" Margin="0,260,108,115">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Filename1" DisplayMemberBinding="{Binding Filename1}"  Width="220"/>
+                    <GridViewColumn Header="Filename2" DisplayMemberBinding="{Binding Filename2}" Width="220"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Content="Button" Command="{Binding LaunchDetailResult}" HorizontalAlignment="Right" Margin="0,261,10,115" Width="93"/>
     </Grid>
 </Window>

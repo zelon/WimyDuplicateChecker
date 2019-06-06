@@ -16,6 +16,8 @@ namespace WimyDuplicateChecker
       InitializeComponent();
 
       directories_.AllowDrop = true;
+
+            DataContext = new MainWindowViewModel();
     }
 
     private void ListBoxItem_Selected(object sender, RoutedEventArgs e)
@@ -25,9 +27,19 @@ namespace WimyDuplicateChecker
 
     public void OnFind(string firstFileName, string newDuplicatedFileName)
     {
-			string msg = string.Format("a:{0},b:{1}", firstFileName, newDuplicatedFileName);
-			AppendOutput(msg);
-			System.Diagnostics.Debug.WriteLine(msg);
+            if (log_.Dispatcher.CheckAccess())
+            {
+                string msg = string.Format("a:{0},b:{1}", firstFileName, newDuplicatedFileName);
+                AppendOutput(msg);
+                System.Diagnostics.Debug.WriteLine(msg);
+
+                MainWindowViewModel viewModel = (MainWindowViewModel)(DataContext);
+                viewModel.AddListViewItem(firstFileName, newDuplicatedFileName);
+            }
+            else
+            {
+                log_.Dispatcher.Invoke(new Action(() => { OnFind(firstFileName, newDuplicatedFileName); }));
+            }
     }
 
     private void OnBrowse(object sender, RoutedEventArgs e)
