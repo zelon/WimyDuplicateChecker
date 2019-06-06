@@ -55,6 +55,7 @@
     </ApplicationDefinition>
     <Compile Include="ContentHashMakers\FileSizeHashMaker.cs" />
     <Compile Include="ContentHashMakers\FullContentHashChecker.cs" />
+    <Compile Include="HashCacheRepository.cs" />
     <Compile Include="ContentHashMakers\HeaderHashMaker.cs" />
     <Compile Include="ContentHashMakers\IContentHashMaker.cs" />
     <Compile Include="ContentHashMakers\TailHashMaker.cs" />
