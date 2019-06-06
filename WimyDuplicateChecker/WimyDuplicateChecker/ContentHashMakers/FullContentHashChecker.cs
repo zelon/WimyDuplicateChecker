@@ -1,5 +1,6 @@
-﻿using System.Security.Cryptography;
+﻿using System.Diagnostics;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace WimyDuplicateChecker.ContentHashMakers
 {
@@ -20,6 +21,7 @@ namespace WimyDuplicateChecker.ContentHashMakers
 				{
 					byte[] bytes = md5.ComputeHash(stream);
                     string calculatedHash = System.BitConverter.ToString(bytes).Replace("-", "").ToLowerInvariant();
+                    Debug.Assert(calculatedHash.Length == 32);
                     cacheManager.AddHash(fileName, calculatedHash);
                     return calculatedHash;
 				}

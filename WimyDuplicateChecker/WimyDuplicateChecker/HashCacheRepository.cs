@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.IO;
 
 namespace WimyDuplicateChecker
@@ -39,9 +40,18 @@ namespace WimyDuplicateChecker
                             break;
                         }
                         string[] result = line.Split('|');
-                        System.Diagnostics.Debug.Assert(result.Length == 2);
+                        if (result.Length != 2)
+                        {
+                            Debug.Assert(false);
+                            continue;
+                        }
                         string filename = result[0];
                         string hash = result[1];
+                        if (hash.Length != 32)
+                        {
+                            Debug.Assert(false);
+                            continue;
+                        }
                         md5Map_.TryAdd(filename, hash);
                     }
                 }
@@ -62,7 +72,7 @@ namespace WimyDuplicateChecker
         {
             if (md5Map_.TryAdd(fileName, hash) == false)
             {
-                System.Diagnostics.Debug.Assert(false);
+                Debug.Assert(false);
                 return;
             }
             string line = string.Format("{0}{1}{2}", fileName, kHashSplitter, hash);
