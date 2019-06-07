@@ -73,10 +73,7 @@ namespace WimyDuplicateChecker
         {
             if (finder_ != null)
             {
-                finder_.Stop();
-                finder_ = null;
-                SetControlButtonText(kTextStart);
-                SetStatusBar("Stopped");
+                Stop();
                 return;
             }
             log_.Text = "";
@@ -90,6 +87,18 @@ namespace WimyDuplicateChecker
             int file_size_bytes_limit = int.Parse(filesize_.Text) * 1024 * 1024;
             finder_ = new Finder(this, directories, search_pattern_.Text, file_size_bytes_limit);
             finder_.Start();
+        }
+
+        private void Stop()
+        {
+            if (finder_ == null)
+            {
+                return;
+            }
+            finder_.Stop();
+            finder_ = null;
+            SetControlButtonText(kTextStart);
+            SetStatusBar("Stopped");
         }
 
         public void OnFinished()
@@ -137,6 +146,11 @@ namespace WimyDuplicateChecker
             {
                 start_button_.Dispatcher.Invoke(new TextChanger(this.SetControlButtonText), new Object[] { text });
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Stop();
         }
     }
 }
