@@ -8,6 +8,7 @@ namespace WimyDuplicateChecker
     {
         public string Filename1 { get; set; }
         public string Filename2 { get; set; }
+        public bool IsSelected { get; set; }
     }
 
 
@@ -16,29 +17,49 @@ namespace WimyDuplicateChecker
         public ObservableCollection<DuplicatedResult> DuplicatedList { get; set; }
         public DuplicatedResult SelectedResult { get; set; }
         public DelegateCommand LaunchDetailResult { get; private set; }
+        public DelegateCommand DeleteFilename2 { get; private set; }
         public MainWindowViewModel()
         {
             DuplicatedList = new ObservableCollection<DuplicatedResult>();
             LaunchDetailResult = new DelegateCommand(OnLaunchDetailResult);
+            DeleteFilename2 = new DelegateCommand(OnDeleteFilename2);
         }
 
         public void AddListViewItem(string firstFileName, string newDuplicatedFileName)
         {
-            DuplicatedResult duplicatedResult = new DuplicatedResult() { Filename1 = firstFileName, Filename2 = newDuplicatedFileName };
+            DuplicatedResult duplicatedResult = new DuplicatedResult() { Filename1 = firstFileName, Filename2 = newDuplicatedFileName, IsSelected = false };
             DuplicatedList.Add(duplicatedResult);
             NotifyPropertyChanged("DuplicatedList");
         }
 
         void OnLaunchDetailResult(object sender)
         {
-            System.Diagnostics.Debug.Write("here!!!");
-
             if (SelectedResult == null)
             {
                 return;
             }
             DetailWindow detailWindow = new DetailWindow(SelectedResult.Filename1, SelectedResult.Filename2);
             detailWindow.Show();
+        }
+
+        void OnDeleteFilename2(object sender)
+        {
+            System.Collections.Generic.List<DuplicatedResult> removedList = new List<DuplicatedResult>();
+            foreach (var i in DuplicatedList)
+            {
+                if (i.IsSelected)
+                {
+                    removedList.Add(i);
+                    System.Diagnostics.Debug.WriteLine("Filename2: {0}", i.Filename2);
+                    System.IO.File.Delete(i.Filename2);
+                }
+            }
+
+            foreach (var removed in removedList)
+            {
+                DuplicatedList.Remove(removed);
+            }
+            NotifyPropertyChanged("DuplicatedList");
         }
     }
 }

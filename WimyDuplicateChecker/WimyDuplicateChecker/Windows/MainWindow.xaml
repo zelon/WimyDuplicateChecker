@@ -15,14 +15,20 @@
         <Label Content="MB 이상 파일만 체크" HorizontalAlignment="Left" Margin="366,142,0,0" VerticalAlignment="Top" Width="141"/>
         <TextBox x:Name="search_pattern_" HorizontalAlignment="Left" Height="23" Margin="10,142,0,0" TextWrapping="Wrap" Text="*.*" VerticalAlignment="Top" Width="120"/>
         <Label Content="파일 패턴만 체크" HorizontalAlignment="Left" Margin="135,142,0,0" VerticalAlignment="Top" Width="141"/>
-        <ListView ItemsSource="{Binding DuplicatedList}" SelectedValue="{Binding SelectedResult}" Margin="0,260,108,115">
+        <ListView ItemsSource="{Binding DuplicatedList}" SelectedValue="{Binding SelectedResult}" SelectionMode="Extended" Margin="0,260,124,115" VirtualizingStackPanel.IsVirtualizing="False">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Filename1" DisplayMemberBinding="{Binding Filename1}"  Width="300"/>
                     <GridViewColumn Header="Filename2" DisplayMemberBinding="{Binding Filename2}" Width="300"/>
                 </GridView>
             </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
-        <Button Content="Button" Command="{Binding LaunchDetailResult}" HorizontalAlignment="Right" Margin="0,261,10,115" Width="93"/>
+        <Button Content="View Detail" Command="{Binding LaunchDetailResult}" HorizontalAlignment="Right" Margin="0,260,10,319" Width="109"/>
+        <Button Content="Delete Filename2" Command="{Binding DeleteFilename2}" HorizontalAlignment="Right" Margin="0,455,10,115" Width="109"/>
     </Grid>
 </Window>
