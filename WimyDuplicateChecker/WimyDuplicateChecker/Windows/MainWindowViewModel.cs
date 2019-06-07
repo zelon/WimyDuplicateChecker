@@ -32,6 +32,13 @@ namespace WimyDuplicateChecker
         void OnLaunchDetailResult(object sender)
         {
             System.Diagnostics.Debug.Write("here!!!");
+
+            if (SelectedResult == null)
+            {
+                return;
+            }
+            DetailWindow detailWindow = new DetailWindow(SelectedResult.Filename1, SelectedResult.Filename2);
+            detailWindow.Show();
         }
     }
 }
