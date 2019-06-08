@@ -1,5 +1,5 @@
 *.swp
-WimyDuplicateChecker/.vs/
-WimyDuplicateChecker/*.suo
-WimyDuplicateChecker/WimyDuplicateChecker/bin/
-WimyDuplicateChecker/WimyDuplicateChecker/obj/
+.vs/
+*.suo
+WimyDuplicateChecker/bin/
+WimyDuplicateChecker/obj/
