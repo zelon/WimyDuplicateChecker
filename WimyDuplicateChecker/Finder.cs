@@ -7,45 +7,30 @@ namespace WimyDuplicateChecker
 	class Finder : IDuplicateResult
 	{
 		private MainJob mainJob_;
-		private FinderCallback callback_ = null;
+		private IFinderCallback callback_ = null;
 		private bool go_on_ = false;
 		private bool found_duplicate_ = false;
-		private Thread thread_ = null;
 		private readonly List<string> directories_;
 		private readonly string searchPattern_;
 		private readonly long file_size_bytes_limit_;
-		public Finder(FinderCallback callback, List<string> directories,
+
+		public Finder(IFinderCallback callback, List<string> directories,
 					  string searchPattern, long fileSizeLimit)
 		{
 			mainJob_ = new MainJob(this);
-			callback_ = callback;
-			searchPattern_ = searchPattern;
-			directories_ = directories;
-			file_size_bytes_limit_ = fileSizeLimit;
 			go_on_ = true;
-		}
 
-		class DummyCallback : FinderCallback
-		{
-			public void OnFinished() { }
-			public void OnFind(string a, string b) { }
-			public void SetStatusBar(string message) { }
-			public void AppendOutput(string message) { }
+			callback_ = callback;
+			directories_ = directories;
+			searchPattern_ = searchPattern;
+			file_size_bytes_limit_ = fileSizeLimit;
 		}
 
 		public void Stop()
 		{
 			callback_.SetStatusBar("Stopped");
-			callback_ = new DummyCallback();
+			callback_ = new NullFinderCallback();
 			go_on_ = false;
-		}
-
-		public void Start()
-		{
-			System.Diagnostics.Debug.Assert(thread_ == null);
-			thread_ = new Thread(new ThreadStart(threadFunc2));
-			thread_.Priority = ThreadPriority.BelowNormal;
-			thread_.Start();
 		}
 
 		private long GetFileSize(string fileName)
@@ -54,7 +39,7 @@ namespace WimyDuplicateChecker
 			return fileInfo.Length;
 		}
 
-		public void threadFunc2()
+		public void Start()
 		{
 			found_duplicate_ = false;
 			callback_.SetStatusBar("Checking...");
@@ -83,7 +68,6 @@ namespace WimyDuplicateChecker
 				}
 			}
 			callback_.OnFinished();
-			thread_ = null;
 		}
 
 		public void OnDuplicated(string firstFileName, string newDuplicatedFileName)

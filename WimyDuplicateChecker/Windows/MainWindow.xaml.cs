@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows;
 
 namespace WimyDuplicateChecker
 {
-    public partial class MainWindow : Window, FinderCallback
+    public partial class MainWindow : Window, IFinderCallback
     {
         private delegate void TextChanger(string msg);
-        private Finder finder_ = null;
         private const string kTextStart = "Start";
         private const string kTextStop = "Stop";
+        private FinderThread finderThread_ = null;
 
         public MainWindow()
         {
@@ -71,9 +72,9 @@ namespace WimyDuplicateChecker
 
         private void OnStart(object sender, RoutedEventArgs e)
         {
-            if (finder_ != null)
+            if (finderThread_ != null)
             {
-                Stop();
+                finderThread_.Stop();
                 return;
             }
             log_.Text = "";
@@ -85,18 +86,18 @@ namespace WimyDuplicateChecker
                 directories.Add(item.ToString());
             }
             int file_size_bytes_limit = int.Parse(filesize_.Text) * 1024 * 1024;
-            finder_ = new Finder(this, directories, search_pattern_.Text, file_size_bytes_limit);
-            finder_.Start();
+            finderThread_ = new FinderThread(this, directories, search_pattern_.Text, file_size_bytes_limit);
+            finderThread_.Start();
         }
 
         private void Stop()
         {
-            if (finder_ == null)
+            if (finderThread_ == null)
             {
                 return;
             }
-            finder_.Stop();
-            finder_ = null;
+            finderThread_.Stop();
+            finderThread_ = null;
             SetControlButtonText(kTextStart);
             SetStatusBar("Stopped");
         }
@@ -104,7 +105,7 @@ namespace WimyDuplicateChecker
         public void OnFinished()
         {
             SetControlButtonText(kTextStart);
-            finder_ = null;
+            finderThread_ = null;
         }
 
         public void SetStatusBar(string msg)
