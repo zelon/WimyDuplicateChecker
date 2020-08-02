@@ -3,32 +3,92 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="WimyDuplicateChecker" Height="800" Width="800" Closing="Window_Closing">
     <Grid>
-        <ListBox x:Name="directories_" VerticalAlignment="Top" Height="127" Drop="OnDropDirectory" Margin="10,10,93,0"/>
-        <Button Content="Browse..." HorizontalAlignment="Right" VerticalAlignment="Top" Width="78" Height="83" Click="OnBrowse" Margin="0,10,10,0"/>
-        <Button Content="Remove" HorizontalAlignment="Right" Margin="0,98,10,0" VerticalAlignment="Top" Width="78" Height="39"/>
-        <Button x:Name="start_button_" Content="Start" Margin="0,173,0,0" VerticalAlignment="Top" Height="81" Click="OnStart"/>
-        <TextBox x:Name="log_" Margin="0,0,0,27" TextWrapping="Wrap" Text="Drag a directory above or press Browse button" VerticalScrollBarVisibility="Auto" Height="83" VerticalAlignment="Bottom"/>
-        <StatusBar Height="27" VerticalAlignment="Bottom">
-            <StatusBarItem x:Name="status_bar_" Content="Ready"/>
-        </StatusBar>
-        <TextBox x:Name="filesize_" HorizontalAlignment="Left" Height="23" Margin="304,142,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="57" TextAlignment="Right"/>
-        <Label Content="MB 이상 파일만 체크" HorizontalAlignment="Left" Margin="366,142,0,0" VerticalAlignment="Top" Width="141"/>
-        <TextBox x:Name="search_pattern_" HorizontalAlignment="Left" Height="23" Margin="10,142,0,0" TextWrapping="Wrap" Text="*.*" VerticalAlignment="Top" Width="120"/>
-        <Label Content="파일 패턴만 체크" HorizontalAlignment="Left" Margin="135,142,0,0" VerticalAlignment="Top" Width="141"/>
-        <ListView ItemsSource="{Binding DuplicatedList}" SelectedValue="{Binding SelectedResult}" SelectionMode="Extended" Margin="0,260,124,115" VirtualizingStackPanel.IsVirtualizing="False">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Filename1" DisplayMemberBinding="{Binding Filename1}"  Width="300"/>
-                    <GridViewColumn Header="Filename2" DisplayMemberBinding="{Binding Filename2}" Width="300"/>
-                </GridView>
-            </ListView.View>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="{x:Type ListViewItem}">
-                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-                </Style>
-            </ListView.ItemContainerStyle>
-        </ListView>
-        <Button Content="View Detail" Command="{Binding LaunchDetailResult}" HorizontalAlignment="Right" Margin="0,260,10,319" Width="109"/>
-        <Button Content="Delete Filename2" Command="{Binding DeleteFilename2}" HorizontalAlignment="Right" Margin="0,455,10,115" Width="109"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="127" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="70" />
+            <RowDefinition Height="127" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="127" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <ListBox x:Name="directories_" Drop="OnDropDirectory" />
+            </Grid>
+            <Grid Grid.Column="1">
+                <Button Content="Browse..." Click="OnBrowse"/>
+            </Grid>
+            <Grid Grid.Column="2">
+                <Button Content="Remove"/>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <TextBox x:Name="filesize_" TextWrapping="Wrap" Text="0" TextAlignment="Right"/>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Label Content="MB 이상 파일만 체크" HorizontalAlignment="Left" />
+            </Grid>
+            <Grid Grid.Column="2">
+                <TextBox x:Name="search_pattern_" TextWrapping="Wrap" Text="*.*" />
+            </Grid>
+            <Grid Grid.Column="3">
+                <Label Content="파일 패턴만 체크" HorizontalAlignment="Left" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Button x:Name="start_button_" Content="Start" Click="OnStart"/>
+        </Grid>
+        <Grid Grid.Row="3">
+            <TextBox x:Name="log_" TextWrapping="Wrap" Text="First, drag a directory above or press Browse button" VerticalScrollBarVisibility="Auto"/>
+        </Grid>
+        <Grid Grid.Row="4">
+            <ListView ItemsSource="{Binding DuplicatedList}" SelectedValue="{Binding SelectedResult}" SelectionMode="Extended" VirtualizingStackPanel.IsVirtualizing="False">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Filename1" DisplayMemberBinding="{Binding Filename1}" Width="300"/>
+                        <GridViewColumn Header="Filename2" DisplayMemberBinding="{Binding Filename2}" Width="300"/>
+                    </GridView>
+                </ListView.View>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Grid>
+        <Grid Grid.Row="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Button Content="Delete Filename1" Command="{Binding DeleteFilename1}" />
+            </Grid>
+            <Grid Grid.Column="1">
+                <Button Content="View Detail" Command="{Binding LaunchDetailResult}" />
+            </Grid>
+            <Grid Grid.Column="2">
+                <Button Content="Delete Filename2" Command="{Binding DeleteFilename2}" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="6">
+            <StatusBar>
+                <StatusBarItem x:Name="status_bar_" Content="Ready"/>
+            </StatusBar>
+        </Grid>
     </Grid>
 </Window>
