@@ -22,7 +22,7 @@ namespace WimyDuplicateChecker
 				{
 					continue;
 				}
-				var fileAndDirs = Directory.EnumerateFileSystemEntries(directoryName, searchPattern_);
+				var fileAndDirs = Directory.EnumerateFileSystemEntries(directoryName, searchPattern_, SearchOption.AllDirectories);
 				foreach (string filename in fileAndDirs)
 				{
 					if (Directory.Exists(filename) == false)
