@@ -17,11 +17,13 @@ namespace WimyDuplicateChecker
         public ObservableCollection<DuplicatedResult> DuplicatedList { get; set; }
         public DuplicatedResult SelectedResult { get; set; }
         public DelegateCommand LaunchDetailResult { get; private set; }
+        public DelegateCommand DeleteFilename1 { get; private set; }
         public DelegateCommand DeleteFilename2 { get; private set; }
         public MainWindowViewModel()
         {
             DuplicatedList = new ObservableCollection<DuplicatedResult>();
             LaunchDetailResult = new DelegateCommand(OnLaunchDetailResult);
+            DeleteFilename1 = new DelegateCommand(OnDeleteFilename1);
             DeleteFilename2 = new DelegateCommand(OnDeleteFilename2);
         }
 
@@ -40,6 +42,26 @@ namespace WimyDuplicateChecker
             }
             DetailWindow detailWindow = new DetailWindow(SelectedResult.Filename1, SelectedResult.Filename2);
             detailWindow.Show();
+        }
+
+        void OnDeleteFilename1(object sender)
+        {
+            List<DuplicatedResult> removedList = new List<DuplicatedResult>();
+            foreach (var i in DuplicatedList)
+            {
+                if (i.IsSelected)
+                {
+                    removedList.Add(i);
+                    System.Diagnostics.Debug.WriteLine("Filename1: {0}", i.Filename1);
+                    System.IO.File.Delete(i.Filename1);
+                }
+            }
+
+            foreach (var removed in removedList)
+            {
+                DuplicatedList.Remove(removed);
+            }
+            NotifyPropertyChanged("DuplicatedList");
         }
 
         void OnDeleteFilename2(object sender)
